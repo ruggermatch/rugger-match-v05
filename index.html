@@ -12,7 +12,7 @@
 
     <link rel="manifest" id="dynamic-manifest">
 
-    <title>Rugger Match - Live Tagger MVP (Secure PWA)</title>
+    <title>Rugger Match - Live Tagger MVP v3 (Secure PWA)</title>
     
     <!-- CryptoJS integrado para cifrado AES en cliente -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -163,6 +163,7 @@
         .team-btn-visitor { background: var(--bg-visitor); color: var(--primary); border-color: var(--border-visitor); }
         .team-btn-visitor.selected { background: var(--border-visitor); color: white; }
 
+        /* V3.18: Aplanamiento total a 9 columnas independientes */
         .events-columns-container { flex: 1; display: flex; gap: 4px; min-height: 0; }
         
         .event-column { display: flex; flex-direction: column; gap: 2px; background: #f8fafc; padding: 2px; border-radius: 4px; border: 1px solid #e2e8f0; flex: 1; min-width: 0; transition: transform 0.2s; }
@@ -346,6 +347,7 @@
                 <button class="team-btn team-btn-visitor" id="teamVisitor" onclick="handleTeamButtonClick('Visitante', this)">Posesión: Visitante</button>
             </div>
 
+            <!-- Arquitectura v3.18: 9 Columnas Aplanadas -->
             <div class="events-columns-container" id="eventsColumnsContainer"></div>
 
             <!-- Notas Integradas -->
@@ -361,12 +363,12 @@
 
     <script>
         // --- CONFIGURACIÓN DE BACKEND Y SEGURIDAD ---
-        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzDwhiZhxNPAtx00wyZcT4osrh_ofhPl8i18SyxUckTKzJDKHIZ7j2tHh7aZTlYbZrtdQ/exec"; // 🔴 REEMPLAZAR AQUÍ POR LA URL DEL WEBHOOK (Fase 1)
-        const AES_SECRET = "RuggerMatch2026"; // Clave de cifrado AES (Compartir con analistas)
+        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzDwhiZhxNPAtx00wyZcT4osrh_ofhPl8i18SyxUckTKzJDKHIZ7j2tHh7aZTlYbZrtdQ/exec"; 
+        const AES_SECRET = "RuggerMatch2026"; 
 
         // --- REGISTRO DE SERVICE WORKER DINÁMICO (PWA Single-File) ---
         const swCode = `
-            const CACHE_NAME = 'rugger-mvp-secure-v3.1';
+            const CACHE_NAME = 'rugger-mvp-secure-v3';
             self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['/']))));
             self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(res => res || fetch(e.request))));
         `;
@@ -376,7 +378,7 @@
             navigator.serviceWorker.register(swUrl).then(() => console.log('✅ PWA Service Worker Inyectado')).catch(console.error);
         }
 
-const pwaManifest = {
+        const pwaManifest = {
             "name": "Rugger Match", 
             "short_name": "Rugger Match", 
             "display": "fullscreen", 
@@ -391,10 +393,6 @@ const pwaManifest = {
                 "purpose": "any maskable"
             }]
         };
-        document.getElementById('dynamic-manifest').href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pwaManifest));
-
-        // --- ESTADO Y VARIABLES GLOBALES ---
-        let timerInterval = null; let timeInSeconds = 0; let isRunning = false; let currentPeriod = "1ª Parte"; let isFlipped};
         document.getElementById('dynamic-manifest').href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pwaManifest));
 
         // --- ESTADO Y VARIABLES GLOBALES ---
@@ -490,7 +488,7 @@ const pwaManifest = {
             "Patada de inicio": ["Centro", "22", "Ensayo", "Golpe de castigo"]
         };
 
-        // --- INICIALIZACIÓN ---
+        // --- INICIALIZACIÓN Y REORDENAMIENTO DE LA UI (V3.18 Plana) ---
         function initUI() {
             renderPitch();
             const container = document.getElementById('eventsColumnsContainer'); 
@@ -557,7 +555,9 @@ const pwaManifest = {
                 savedOrder = defaultOrder;
             }
 
-            savedOrder.forEach(id => { container.appendChild(colsData[id]); });
+            savedOrder.forEach(id => {
+                container.appendChild(colsData[id]);
+            });
 
             recalculateDiscreteStats(); updateLiveStatsUI(); updateRecentEventsLog(); checkMicrophonePermission(); 
         }
@@ -598,6 +598,7 @@ const pwaManifest = {
         }
         function toggleZoneLabels() { areZoneLabelsVisible = !areZoneLabelsVisible; document.body.classList.toggle('hide-zone-labels', !areZoneLabelsVisible); document.getElementById('btnToggleZones').innerText = areZoneLabelsVisible ? '👁️' : '🕶️'; }
 
+        // --- CRONÓMETRO Y ESTADÍSTICAS ---
         function updateTimerDisplay() {
             const m = Math.floor(timeInSeconds / 60).toString().padStart(2, '0'); const s = (timeInSeconds % 60).toString().padStart(2, '0');
             document.getElementById('timerDisplay').innerText = `${m}:${s}`;
@@ -660,6 +661,7 @@ const pwaManifest = {
                     if(e.originalEvent === 'Palos' && e.subEvent && e.subEvent.startsWith('Fallo')) counts[t].pgMiss++;
                     if(e.originalEvent === 'Drop' && e.subEvent === 'Acierto (+3)') counts[t].drops++;
                 }
+
                 if (e.teamId === 'Local' || e.teamId === 'Visitante') {
                     if (activeTeam !== e.teamId) { activeTeam = e.teamId; if (activeTeam === 'Local') currentPhasesLocal = 0; if (activeTeam === 'Visitante') currentPhasesVisitor = 0; }
                 } else if (e.teamId === 'Disputa') { activeTeam = null; currentPhasesLocal = 0; currentPhasesVisitor = 0; }
@@ -702,6 +704,7 @@ const pwaManifest = {
             });
         }
 
+        // --- LÓGICA TÁCTICA ---
         function selectTeam(teamId) {
             if (currentSelections.team === teamId) {
                 currentSelections.team = null;
@@ -740,8 +743,15 @@ const pwaManifest = {
             if (matchHasStarted) { alert("⚠️ Edición bloqueada: Partido en curso."); return; }
             isEditMode = !isEditMode; document.body.classList.toggle('edit-mode', isEditMode);
             const btnEdit = document.getElementById('btnEditMode');
-            if (isEditMode) { btnEdit.innerText = "🔓 Guardar Ajustes"; btnEdit.style.background = "var(--warning)"; updateStatus("🔓 MODO EDICIÓN ACTIVO."); } 
-            else { btnEdit.innerText = "🔒 Editar"; btnEdit.style.background = "#8b5cf6"; updateStatus("Modo edición bloqueado."); }
+            if (isEditMode) { 
+                btnEdit.innerText = "🔓 Guardar Ajustes"; 
+                btnEdit.style.background = "var(--warning)"; 
+                updateStatus("🔓 MODO EDICIÓN ACTIVO."); 
+            } else { 
+                btnEdit.innerText = "🔒 Editar"; 
+                btnEdit.style.background = "#8b5cf6"; 
+                updateStatus("Modo edición bloqueado."); 
+            }
         }
 
         function handleEventButtonClick(btn) {
@@ -762,12 +772,25 @@ const pwaManifest = {
                 if (matchHasStarted) return;
                 const newName = prompt(`Nombre Equipo ${teamId}:`, teamNames[teamId]);
                 if (newName && newName.trim() !== "") { teamNames[teamId] = newName.trim().substring(0, 15); updateTeamUI(); }
-                teamBeingEdited = teamId; document.getElementById('colorPickerTitle').innerText = `Color base para ${teamNames[teamId]}`;
-                const grid = document.getElementById('colorGrid'); grid.innerHTML = '';
+                
+                teamBeingEdited = teamId;
+                document.getElementById('colorPickerTitle').innerText = `Color base para ${teamNames[teamId]}`;
+                
+                const grid = document.getElementById('colorGrid');
+                grid.innerHTML = '';
+                
                 Object.keys(BASIC_PALETTE).forEach(colorName => {
-                    const swatch = document.createElement('div'); swatch.className = 'color-swatch'; swatch.style.backgroundColor = BASIC_PALETTE[colorName].bg; swatch.style.borderColor = BASIC_PALETTE[colorName].border; swatch.title = colorName.charAt(0).toUpperCase() + colorName.slice(1); swatch.onclick = () => applyTeamColor(colorName); grid.appendChild(swatch);
+                    const swatch = document.createElement('div');
+                    swatch.className = 'color-swatch';
+                    swatch.style.backgroundColor = BASIC_PALETTE[colorName].bg;
+                    swatch.style.borderColor = BASIC_PALETTE[colorName].border;
+                    swatch.title = colorName.charAt(0).toUpperCase() + colorName.slice(1);
+                    swatch.onclick = () => applyTeamColor(colorName);
+                    grid.appendChild(swatch);
                 });
-                document.getElementById('colorPickerModal').style.display = 'flex'; return; 
+                
+                document.getElementById('colorPickerModal').style.display = 'flex';
+                return; 
             }
             selectTeam(teamId);
         }
@@ -777,9 +800,14 @@ const pwaManifest = {
             const teamKey = teamBeingEdited === 'Visitante' ? 'visitor' : 'local';
             document.documentElement.style.setProperty(`--bg-${teamKey}`, BASIC_PALETTE[colorName].bg);
             document.documentElement.style.setProperty(`--border-${teamKey}`, BASIC_PALETTE[colorName].border);
-            updateStatus(`🎨 Color de ${teamNames[teamBeingEdited]} actualizado a ${colorName}.`); closeColorPicker();
+            updateStatus(`🎨 Color de ${teamNames[teamBeingEdited]} actualizado a ${colorName}.`);
+            closeColorPicker();
         }
-        function closeColorPicker() { document.getElementById('colorPickerModal').style.display = 'none'; teamBeingEdited = null; }
+
+        function closeColorPicker() {
+            document.getElementById('colorPickerModal').style.display = 'none';
+            teamBeingEdited = null;
+        }
 
         function updateTeamUI() {
             document.getElementById('teamLocal').innerText = `Posesión: ${teamNames.Local}`; document.getElementById('teamVisitor').innerText = `Posesión: ${teamNames.Visitante}`;
@@ -843,7 +871,8 @@ const pwaManifest = {
                 const subEvents = SUB_EVENTS_MAP[originalEvent];
                 
                 subEvents.forEach(sub => {
-                    let btn = document.createElement('button'); btn.className = `event-btn subfase-btn ${actionTeam === 'Local' ? 'local-sub' : 'visitor-sub'}`;
+                    let btn = document.createElement('button'); 
+                    btn.className = `event-btn subfase-btn ${actionTeam === 'Local' ? 'local-sub' : 'visitor-sub'}`;
                     btn.innerText = sub; btn.onclick = () => selectSubEvent(sub); subContainer.appendChild(btn);
                 });
                 
@@ -960,15 +989,11 @@ const pwaManifest = {
             else { const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen; if (exit) { exit.call(document); document.getElementById('btnFullscreen').innerText = '⛶'; } }
         }
 
-        // --- SISTEMA DE EXPORTACIÓN SEGURO (AES + Fetch API) ---
+        // --- SISTEMA DE EXPORTACIÓN SEGURO (AES + Fetch API + Sanitización) ---
         async function exportAndSendData() {
             pauseTimer(); 
             if (eventsLog.length === 0) { alert("No hay datos para exportar."); return; }
             
-            if (GAS_WEBAPP_URL === "URL_AQUI") {
-                alert("⚠️ Error crítico: Endpoint no configurado. Ajuste GAS_WEBAPP_URL en el código fuente antes de guardar."); return;
-            }
-
             updateStatus("🔒 Cifrando datos (AES)...");
             
             // Generación de CSV en bruto en memoria
@@ -985,24 +1010,32 @@ const pwaManifest = {
             // Cifrado simétrico AES-256 en cliente
             const encryptedPayload = CryptoJS.AES.encrypt(rawCSV, AES_SECRET).toString();
             
-            // NUEVA LÓGICA: Sanitización estricta de nombres y generación dinámica de archivo
-            const sanitizeFilename = (str) => {
+            // LÓGICA DE SANITIZACIÓN Y NOMBRE DE ARCHIVO
+            const sanitizeString = (str) => {
                 return str
-                    .normalize("NFD")                      // Separa acentos
-                    .replace(/[\u0300-\u036f]/g, "")       // Elimina acentos
-                    .replace(/[^a-zA-Z0-9]/g, "")          // Elimina espacios y símbolos
-                    .substring(0, 20);                     // Limita largo para seguridad de SO
+                    .normalize("NFD") 
+                    .replace(/[\u0300-\u036f]/g, "") // Elimina acentos
+                    .replace(/[^a-zA-Z0-9]/g, "");    // Elimina espacios y caracteres especiales
             };
-            
+
             const dateStr = new Date().toISOString().split('T')[0];
-            const localSanitized = sanitizeFilename(teamNames.Local) || "Local";
-            const visitorSanitized = sanitizeFilename(teamNames.Visitante) || "Visitante";
-            const fileName = `${dateStr}_${localSanitized}_${visitorSanitized}.aes`;
+            const localClean = sanitizeString(teamNames.Local);
+            const visitorClean = sanitizeString(teamNames.Visitante);
+            const fileName = `${dateStr}_${localClean}_${visitorClean}.aes`;
             
-            updateStatus("🌐 Transmitiendo datos cifrados al servidor...");
+            updateStatus("🌐 Procesando envío...");
+
+            if (GAS_WEBAPP_URL === "URL_AQUI") {
+                 console.warn("Webhook no configurado. Forzando descarga local del archivo cifrado para el piloto.");
+                 const blob = new Blob([encryptedPayload], { type: 'text/plain' });
+                 const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = fileName;
+                 document.body.appendChild(link); link.click(); document.body.removeChild(link);
+                 updateStatus("✅ Partido cifrado guardado en tu dispositivo.");
+                 return;
+            }
 
             try {
-                // Envío tipo "webhook" opaco mediante no-cors para saltar bloqueos CORS
+                // Envío tipo "webhook" opaco mediante no-cors para saltar bloqueos CORS del navegador en scripts de Apps Script
                 await fetch(GAS_WEBAPP_URL, {
                     method: 'POST',
                     mode: 'no-cors', 
@@ -1015,13 +1048,13 @@ const pwaManifest = {
                 
                 // Confirmación visual
                 updateStatus("✅ Envío seguro completado con éxito.");
-                alert(`Partido cifrado y enviado correctamente como:\n${fileName}`);
+                alert("Partido enviado al servidor de forma cifrada.");
                 
             } catch (error) {
                 console.error("Fallo de red:", error);
                 updateStatus("❌ Error de red. Fallback a descarga cifrada de emergencia...");
                 
-                // Fallback de emergencia: Descarga cifrada .aes
+                // Fallback de emergencia: Descarga pero CIFRADA. Jamás en CSV bruto.
                 const blob = new Blob([encryptedPayload], { type: 'text/plain' });
                 const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = fileName;
                 document.body.appendChild(link); link.click(); document.body.removeChild(link);
