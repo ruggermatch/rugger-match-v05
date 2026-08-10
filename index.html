@@ -12,7 +12,7 @@
 
     <link rel="manifest" id="dynamic-manifest">
 
-    <title>Rugger Match - Live Tagger MVP v3 (Secure PWA)</title>
+    <title>Rugger Match - Secure MVP</title>
     
     <!-- CryptoJS integrado para cifrado AES en cliente -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -82,10 +82,8 @@
         body.hide-zone-labels .zone > span { opacity: 0; pointer-events: none; transition: opacity 0.2s; }
         body:not(.hide-zone-labels) .zone > span { transition: opacity 0.2s; }
 
-        /* SECCIÓN CENTRAL */
         .middle-section { display: flex; flex-shrink: 0; height: 45vh; gap: 5px; }
 
-        /* Terreno de Juego */
         .pitch-container { display: flex; flex-direction: column; flex: 3; min-width: 0; }
         .pitch-wrapper { position: relative; flex: 1; border: 2px solid #000; border-bottom: none; background: rgba(0,0,0,0.4); overflow: hidden; }
         
@@ -118,7 +116,6 @@
         .attack-text { position: relative; z-index: 2; font-weight: bold; font-size: 0.85rem; color: #000; text-shadow: 1px 1px 3px rgba(255,255,255,0.9); pointer-events: none; }
         .flip-icon { position: absolute; right: 10px; z-index: 2; font-size: 1.1rem; pointer-events: none; filter: drop-shadow(0px 0px 2px white); }
 
-        /* PANEL DE ESTADÍSTICAS */
         .stats-panel { display: flex; flex-direction: column; flex: 1; background: white; border-radius: 5px; padding: 5px 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #e2e8f0; min-width: 0; }
         .stats-title { font-size: 0.75rem; font-weight: bold; color: var(--primary); text-align: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 2px; margin-bottom: 2px; letter-spacing: 1px; }
         
@@ -151,7 +148,6 @@
         .recent-events-list li .time { color: #64748b; font-weight: bold; }
         .recent-events-list li .note-icon { color: var(--warning); font-size: 0.6rem; }
 
-        /* Panel Inferior: Estructura 100% Plana y Multilínea */
         .bottom-panel { background: white; padding: 4px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 4px; flex: 1; }
         
         .teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; flex-shrink: 0; height: 35px; }
@@ -163,13 +159,11 @@
         .team-btn-visitor { background: var(--bg-visitor); color: var(--primary); border-color: var(--border-visitor); }
         .team-btn-visitor.selected { background: var(--border-visitor); color: white; }
 
-        /* V3.18: Aplanamiento total a 9 columnas independientes */
         .events-columns-container { flex: 1; display: flex; gap: 4px; min-height: 0; }
         
         .event-column { display: flex; flex-direction: column; gap: 2px; background: #f8fafc; padding: 2px; border-radius: 4px; border: 1px solid #e2e8f0; flex: 1; min-width: 0; transition: transform 0.2s; }
         .event-group-title { font-size: 0.65rem; font-weight: bold; color: #64748b; text-transform: uppercase; text-align: center; border-bottom: 1px solid #cbd5e1; padding-bottom: 1px; margin-bottom: 1px; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Botones de reordenamiento */
         .col-mover { display: none; cursor: pointer; color: var(--secondary); padding: 0 4px; user-select: none; font-size: 0.8rem; border-radius: 3px; }
         .col-mover:hover { background: #cbd5e1; color: var(--primary); }
         body.edit-mode .col-mover { display: inline-block; }
@@ -180,14 +174,12 @@
             transition: all 0.2s; color: var(--primary); border: 1px solid transparent; border-left-width: 3px; min-height: 20px;
         }
         
-        /* Colores de Botones de Acción (Locales vs Visitantes) */
         .local-action-btn { background: var(--bg-local); border-left-color: var(--border-local); }
         .local-action-btn:active, .local-action-btn.selected { background: var(--border-local); color: white; }
         
         .visitor-action-btn { background: var(--bg-visitor); border-left-color: var(--border-visitor); }
         .visitor-action-btn:active, .visitor-action-btn.selected { background: var(--border-visitor); color: white; }
         
-        /* Subfases */
         .subfases-column { background: #f1f5f9; border: 1px dashed #cbd5e1; }
         .subfases-column .event-group-title { color: var(--secondary); border-bottom-color: var(--secondary); }
         .subfase-btn { background: #e2e8f0; border-left-color: #94a3b8; font-weight: bold; }
@@ -242,7 +234,6 @@
     </div>
 
     <div id="appContent">
-        <!-- Top Bar -->
         <div class="top-bar">
             <div class="timer-section">
                 <span class="timer-display" id="timerDisplay">00:00</span>
@@ -275,7 +266,6 @@
             </div>
         </div>
 
-        <!-- SECCIÓN CENTRAL -->
         <div class="middle-section">
             <div class="pitch-container">
                 <div class="pitch-wrapper">
@@ -305,7 +295,6 @@
                 </div>
             </div>
 
-            <!-- PANEL ESTADÍSTICAS -->
             <div class="stats-panel">
                 <div class="stats-title">LIVE STATS</div>
                 <div class="stat-bar-container">
@@ -340,17 +329,14 @@
             </div>
         </div>
 
-        <!-- Bottom Panel: Data Entry -->
         <div class="bottom-panel">
             <div class="teams-grid">
                 <button class="team-btn team-btn-local" id="teamLocal" onclick="handleTeamButtonClick('Local', this)">Posesión: Local</button>
                 <button class="team-btn team-btn-visitor" id="teamVisitor" onclick="handleTeamButtonClick('Visitante', this)">Posesión: Visitante</button>
             </div>
 
-            <!-- Arquitectura v3.18: 9 Columnas Aplanadas -->
             <div class="events-columns-container" id="eventsColumnsContainer"></div>
 
-            <!-- Notas Integradas -->
             <div class="entry-controls-row">
                 <div id="currentPhaseBadge" class="phase-badge phase-estatica">Partido no iniciado</div>
                 <input type="text" id="notesInput" class="notes-input" placeholder="Añadir notas al último evento (Texto o Voz)..." onkeypress="if(event.key === 'Enter') attachTextNoteToLastEvent()">
@@ -366,18 +352,20 @@
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzDwhiZhxNPAtx00wyZcT4osrh_ofhPl8i18SyxUckTKzJDKHIZ7j2tHh7aZTlYbZrtdQ/exec"; 
         const AES_SECRET = "RuggerMatch2026"; 
 
-        // --- REGISTRO DE SERVICE WORKER DINÁMICO (PWA Single-File) ---
+        // --- REGISTRO DE SERVICE WORKER DINÁMICO (VERSIÓN v4 - BUST CACHE) ---
+        // Esto obliga a las tablets a descargar el nuevo icon.png y el nuevo HTML
         const swCode = `
-            const CACHE_NAME = 'rugger-mvp-secure-v3';
-            self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['/']))));
+            const CACHE_NAME = 'rugger-mvp-secure-v4';
+            self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['/', '/icon.png']))));
             self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(res => res || fetch(e.request))));
         `;
         const swBlob = new Blob([swCode], { type: 'application/javascript' });
         const swUrl = URL.createObjectURL(swBlob);
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register(swUrl).then(() => console.log('✅ PWA Service Worker Inyectado')).catch(console.error);
+            navigator.serviceWorker.register(swUrl).then(() => console.log('✅ PWA Service Worker v4 Inyectado')).catch(console.error);
         }
 
+        // --- MANIFIESTO PWA DINÁMICO CON RUTA AL NUEVO LOGO ---
         const pwaManifest = {
             "name": "Rugger Match", 
             "short_name": "Rugger Match", 
@@ -416,6 +404,7 @@
         let statsState = { possession: { Local: 0, Visitante: 0 }, zones: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 }, totalZoneTime: 0 };
         let filterNotesOnly = false; 
 
+        // --- FUNCIONES DE VERIFICACIÓN Y MICROFONO ---
         function checkMatchStarted() {
             if (!matchHasStarted || !isRunning) {
                 updateStatus("⚠️ ERROR: El cronómetro debe estar en marcha para registrar acciones.");
@@ -427,7 +416,6 @@
             return true;
         }
 
-        // --- DICTADO POR VOZ ---
         let recognition; let isRecordingVoice = false; let micPermissionGranted = false;
         function checkMicrophonePermission() {
             const btnMic = document.getElementById('btnMic');
@@ -467,7 +455,7 @@
             updateStatus(`✅ Nota adjuntada.`); input.value = ''; updateRecentEventsLog();
         }
 
-        // --- CONSTANTES ---
+        // --- CONSTANTES DE DICCIONARIO ---
         const ZONES = [{ id: 1, name: "Z1" }, { id: 2, name: "Z2" }, { id: 3, name: "Z3" }, { id: 4, name: "Z4" }, { id: 5, name: "Z5" }, { id: 6, name: "Z6" }, { id: 7, name: "Z7" }];
         const CHANNELS = [{ id: "Izq", name: "Canal Izquierdo" }, { id: "Cen", name: "Canal Central" }, { id: "Der", name: "Canal Derecho" }];
 
@@ -488,7 +476,7 @@
             "Patada de inicio": ["Centro", "22", "Ensayo", "Golpe de castigo"]
         };
 
-        // --- INICIALIZACIÓN Y REORDENAMIENTO DE LA UI (V3.18 Plana) ---
+        // --- INICIALIZACIÓN UI ---
         function initUI() {
             renderPitch();
             const container = document.getElementById('eventsColumnsContainer'); 
@@ -555,9 +543,7 @@
                 savedOrder = defaultOrder;
             }
 
-            savedOrder.forEach(id => {
-                container.appendChild(colsData[id]);
-            });
+            savedOrder.forEach(id => { container.appendChild(colsData[id]); });
 
             recalculateDiscreteStats(); updateLiveStatsUI(); updateRecentEventsLog(); checkMicrophonePermission(); 
         }
@@ -598,7 +584,6 @@
         }
         function toggleZoneLabels() { areZoneLabelsVisible = !areZoneLabelsVisible; document.body.classList.toggle('hide-zone-labels', !areZoneLabelsVisible); document.getElementById('btnToggleZones').innerText = areZoneLabelsVisible ? '👁️' : '🕶️'; }
 
-        // --- CRONÓMETRO Y ESTADÍSTICAS ---
         function updateTimerDisplay() {
             const m = Math.floor(timeInSeconds / 60).toString().padStart(2, '0'); const s = (timeInSeconds % 60).toString().padStart(2, '0');
             document.getElementById('timerDisplay').innerText = `${m}:${s}`;
@@ -661,7 +646,6 @@
                     if(e.originalEvent === 'Palos' && e.subEvent && e.subEvent.startsWith('Fallo')) counts[t].pgMiss++;
                     if(e.originalEvent === 'Drop' && e.subEvent === 'Acierto (+3)') counts[t].drops++;
                 }
-
                 if (e.teamId === 'Local' || e.teamId === 'Visitante') {
                     if (activeTeam !== e.teamId) { activeTeam = e.teamId; if (activeTeam === 'Local') currentPhasesLocal = 0; if (activeTeam === 'Visitante') currentPhasesVisitor = 0; }
                 } else if (e.teamId === 'Disputa') { activeTeam = null; currentPhasesLocal = 0; currentPhasesVisitor = 0; }
@@ -704,7 +688,6 @@
             });
         }
 
-        // --- LÓGICA TÁCTICA ---
         function selectTeam(teamId) {
             if (currentSelections.team === teamId) {
                 currentSelections.team = null;
@@ -743,15 +726,8 @@
             if (matchHasStarted) { alert("⚠️ Edición bloqueada: Partido en curso."); return; }
             isEditMode = !isEditMode; document.body.classList.toggle('edit-mode', isEditMode);
             const btnEdit = document.getElementById('btnEditMode');
-            if (isEditMode) { 
-                btnEdit.innerText = "🔓 Guardar Ajustes"; 
-                btnEdit.style.background = "var(--warning)"; 
-                updateStatus("🔓 MODO EDICIÓN ACTIVO."); 
-            } else { 
-                btnEdit.innerText = "🔒 Editar"; 
-                btnEdit.style.background = "#8b5cf6"; 
-                updateStatus("Modo edición bloqueado."); 
-            }
+            if (isEditMode) { btnEdit.innerText = "🔓 Guardar Ajustes"; btnEdit.style.background = "var(--warning)"; updateStatus("🔓 MODO EDICIÓN ACTIVO."); } 
+            else { btnEdit.innerText = "🔒 Editar"; btnEdit.style.background = "#8b5cf6"; updateStatus("Modo edición bloqueado."); }
         }
 
         function handleEventButtonClick(btn) {
@@ -772,25 +748,12 @@
                 if (matchHasStarted) return;
                 const newName = prompt(`Nombre Equipo ${teamId}:`, teamNames[teamId]);
                 if (newName && newName.trim() !== "") { teamNames[teamId] = newName.trim().substring(0, 15); updateTeamUI(); }
-                
-                teamBeingEdited = teamId;
-                document.getElementById('colorPickerTitle').innerText = `Color base para ${teamNames[teamId]}`;
-                
-                const grid = document.getElementById('colorGrid');
-                grid.innerHTML = '';
-                
+                teamBeingEdited = teamId; document.getElementById('colorPickerTitle').innerText = `Color base para ${teamNames[teamId]}`;
+                const grid = document.getElementById('colorGrid'); grid.innerHTML = '';
                 Object.keys(BASIC_PALETTE).forEach(colorName => {
-                    const swatch = document.createElement('div');
-                    swatch.className = 'color-swatch';
-                    swatch.style.backgroundColor = BASIC_PALETTE[colorName].bg;
-                    swatch.style.borderColor = BASIC_PALETTE[colorName].border;
-                    swatch.title = colorName.charAt(0).toUpperCase() + colorName.slice(1);
-                    swatch.onclick = () => applyTeamColor(colorName);
-                    grid.appendChild(swatch);
+                    const swatch = document.createElement('div'); swatch.className = 'color-swatch'; swatch.style.backgroundColor = BASIC_PALETTE[colorName].bg; swatch.style.borderColor = BASIC_PALETTE[colorName].border; swatch.title = colorName.charAt(0).toUpperCase() + colorName.slice(1); swatch.onclick = () => applyTeamColor(colorName); grid.appendChild(swatch);
                 });
-                
-                document.getElementById('colorPickerModal').style.display = 'flex';
-                return; 
+                document.getElementById('colorPickerModal').style.display = 'flex'; return; 
             }
             selectTeam(teamId);
         }
@@ -800,14 +763,9 @@
             const teamKey = teamBeingEdited === 'Visitante' ? 'visitor' : 'local';
             document.documentElement.style.setProperty(`--bg-${teamKey}`, BASIC_PALETTE[colorName].bg);
             document.documentElement.style.setProperty(`--border-${teamKey}`, BASIC_PALETTE[colorName].border);
-            updateStatus(`🎨 Color de ${teamNames[teamBeingEdited]} actualizado a ${colorName}.`);
-            closeColorPicker();
+            updateStatus(`🎨 Color de ${teamNames[teamBeingEdited]} actualizado a ${colorName}.`); closeColorPicker();
         }
-
-        function closeColorPicker() {
-            document.getElementById('colorPickerModal').style.display = 'none';
-            teamBeingEdited = null;
-        }
+        function closeColorPicker() { document.getElementById('colorPickerModal').style.display = 'none'; teamBeingEdited = null; }
 
         function updateTeamUI() {
             document.getElementById('teamLocal').innerText = `Posesión: ${teamNames.Local}`; document.getElementById('teamVisitor').innerText = `Posesión: ${teamNames.Visitante}`;
@@ -871,8 +829,7 @@
                 const subEvents = SUB_EVENTS_MAP[originalEvent];
                 
                 subEvents.forEach(sub => {
-                    let btn = document.createElement('button'); 
-                    btn.className = `event-btn subfase-btn ${actionTeam === 'Local' ? 'local-sub' : 'visitor-sub'}`;
+                    let btn = document.createElement('button'); btn.className = `event-btn subfase-btn ${actionTeam === 'Local' ? 'local-sub' : 'visitor-sub'}`;
                     btn.innerText = sub; btn.onclick = () => selectSubEvent(sub); subContainer.appendChild(btn);
                 });
                 
@@ -989,7 +946,6 @@
             else { const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen; if (exit) { exit.call(document); document.getElementById('btnFullscreen').innerText = '⛶'; } }
         }
 
-        // --- SISTEMA DE EXPORTACIÓN SEGURO (AES + Fetch API + Sanitización) ---
         async function exportAndSendData() {
             pauseTimer(); 
             if (eventsLog.length === 0) { alert("No hay datos para exportar."); return; }
@@ -1025,7 +981,7 @@
             
             updateStatus("🌐 Procesando envío...");
 
-            if (GAS_WEBAPP_URL === "URL_AQUI") {
+            if (GAS_WEBAPP_URL === "URL_AQUI" || GAS_WEBAPP_URL.trim() === "") {
                  console.warn("Webhook no configurado. Forzando descarga local del archivo cifrado para el piloto.");
                  const blob = new Blob([encryptedPayload], { type: 'text/plain' });
                  const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = fileName;
