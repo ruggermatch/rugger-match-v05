@@ -377,10 +377,19 @@
         }
 
         const pwaManifest = {
-            "name": "Rugger Match Live Tagger v3.18", "short_name": "Rugger MVP", "display": "fullscreen", "orientation": "landscape",
+                    </div>
+    </div>
+
+    <script>
+        const pwaManifest = {
+            "name": "Rugger Match", "short_name": "Rugger Match", "display": "fullscreen", "orientation": "landscape",
             "start_url": ".", "background_color": "#1e293b", "theme_color": "#1e293b",
-            "icons": [{"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMjAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzFlMjkzYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSI2MCIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+Uk08L3RleHQ+PC9zdmc+", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable"}]
+            "icons": [{"src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]
         };
+        document.getElementById('dynamic-manifest').href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pwaManifest));
+
+        // --- ESTADO Y VARIABLES GLOBALES ---
+        let timerInterval = null; let timeInSeconds = 0; let isRunning = false; let currentPeriod = "1ª Parte"; let isFlipped};
         document.getElementById('dynamic-manifest').href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pwaManifest));
 
         // --- ESTADO Y VARIABLES GLOBALES ---
