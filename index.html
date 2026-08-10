@@ -12,7 +12,7 @@
 
     <link rel="manifest" id="dynamic-manifest">
 
-    <title>Rugger Match - Live Tagger MVP v3 (Secure PWA)</title>
+    <title>Rugger Match - Live Tagger MVP (Secure PWA)</title>
     
     <!-- CryptoJS integrado para cifrado AES en cliente -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -366,7 +366,7 @@
 
         // --- REGISTRO DE SERVICE WORKER DINÁMICO (PWA Single-File) ---
         const swCode = `
-            const CACHE_NAME = 'rugger-mvp-secure-v3';
+            const CACHE_NAME = 'rugger-mvp-secure-v3.1';
             self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['/']))));
             self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(res => res || fetch(e.request))));
         `;
@@ -970,12 +970,25 @@
 
             // Cifrado simétrico AES-256 en cliente
             const encryptedPayload = CryptoJS.AES.encrypt(rawCSV, AES_SECRET).toString();
-            const fileName = `RuggerMatch_SecureData_${new Date().toISOString().split('T')[0]}.aes`;
+            
+            // NUEVA LÓGICA: Sanitización estricta de nombres y generación dinámica de archivo
+            const sanitizeFilename = (str) => {
+                return str
+                    .normalize("NFD")                      // Separa acentos
+                    .replace(/[\u0300-\u036f]/g, "")       // Elimina acentos
+                    .replace(/[^a-zA-Z0-9]/g, "")          // Elimina espacios y símbolos
+                    .substring(0, 20);                     // Limita largo para seguridad de SO
+            };
+            
+            const dateStr = new Date().toISOString().split('T')[0];
+            const localSanitized = sanitizeFilename(teamNames.Local) || "Local";
+            const visitorSanitized = sanitizeFilename(teamNames.Visitante) || "Visitante";
+            const fileName = `${dateStr}_${localSanitized}_${visitorSanitized}.aes`;
             
             updateStatus("🌐 Transmitiendo datos cifrados al servidor...");
 
             try {
-                // Envío tipo "webhook" opaco mediante no-cors para saltar bloqueos CORS del navegador en scripts de Apps Script
+                // Envío tipo "webhook" opaco mediante no-cors para saltar bloqueos CORS
                 await fetch(GAS_WEBAPP_URL, {
                     method: 'POST',
                     mode: 'no-cors', 
@@ -988,13 +1001,13 @@
                 
                 // Confirmación visual
                 updateStatus("✅ Envío seguro completado con éxito.");
-                alert("Partido enviado al servidor de forma cifrada.");
+                alert(`Partido cifrado y enviado correctamente como:\n${fileName}`);
                 
             } catch (error) {
                 console.error("Fallo de red:", error);
                 updateStatus("❌ Error de red. Fallback a descarga cifrada de emergencia...");
                 
-                // Fallback de emergencia: Descarga pero CIFRADA. Jamás en CSV bruto.
+                // Fallback de emergencia: Descarga cifrada .aes
                 const blob = new Blob([encryptedPayload], { type: 'text/plain' });
                 const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = fileName;
                 document.body.appendChild(link); link.click(); document.body.removeChild(link);
