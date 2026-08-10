@@ -376,15 +376,20 @@
             navigator.serviceWorker.register(swUrl).then(() => console.log('✅ PWA Service Worker Inyectado')).catch(console.error);
         }
 
-        const pwaManifest = {
-                    </div>
-    </div>
-
-    <script>
-        const pwaManifest = {
-            "name": "Rugger Match", "short_name": "Rugger Match", "display": "fullscreen", "orientation": "landscape",
-            "start_url": ".", "background_color": "#1e293b", "theme_color": "#1e293b",
-            "icons": [{"src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]
+const pwaManifest = {
+            "name": "Rugger Match", 
+            "short_name": "Rugger Match", 
+            "display": "fullscreen", 
+            "orientation": "landscape",
+            "start_url": ".", 
+            "background_color": "#1e293b", 
+            "theme_color": "#1e293b",
+            "icons": [{
+                "src": "icon.png", 
+                "sizes": "512x512", 
+                "type": "image/png", 
+                "purpose": "any maskable"
+            }]
         };
         document.getElementById('dynamic-manifest').href = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(pwaManifest));
 
