@@ -1,7 +1,8 @@
-const CACHE_NAME = 'ruggermatch-cache-v2';
+const CACHE_NAME = 'ruggermatch-cache-v3';
 const urlsToCache = [
   './index.html',
   './manifest.json',
+  './icon.png',
   'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js'
 ];
 
